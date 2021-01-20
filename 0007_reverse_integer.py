@@ -19,4 +19,4 @@ class Solution:
         
         if x < 0:
             res = -res
-        return res
+        return res
