@@ -1,11 +1,5 @@
 // https://leetcode.cn/problems/multiply-strings/
 
-#include <iostream>
-#include <string>
-#include <vector>
-
-using namespace std;
-
 class Solution {
 public:
     string multiply(string num1, string num2) {
@@ -52,14 +46,3 @@ public:
         return res;
     }
 };
-
-int main()
-{
-    Solution solu;
-    string num1 = "123";
-    string num2 = "456";
-
-    cout << solu.multiply(num1, num2) << endl;
-    
-    return 0;
-}
