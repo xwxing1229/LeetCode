@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/insert-interval/
+# https://leetcode.cn/problems/insert-interval/
 
 class Solution:
     def insert(self, intervals, newInterval):
@@ -10,26 +10,21 @@ class Solution:
             res: list[list[int]]
         """
 
-        # Add newInterval into intervals and sort the intervals
-        # based on their first elements.
-        intervals.append(newInterval)
-        intervals.sort()
-
-        # Add the first interval into result.
-        res = [intervals[0]]
-        idx = 0
-        right = intervals[0][1]
-
-        for i in range(1, len(intervals)):
-            # Merge the two intervals.
-            if right >= intervals[i][0]:
-                res[idx][1] = max(right, intervals[i][1])
-            
-            # Add the interval into result.
-            else:
+        res = []
+        left, right = newInterval
+        inserted = False
+        for i in range(len(intervals)):
+            if intervals[i][0] > right:
+                if not inserted:
+                    res.append([left, right])
+                    inserted = True
                 res.append(intervals[i])
-                idx = idx + 1
-
-            right = res[idx][1]
+            elif intervals[i][1] < left:
+                res.append(intervals[i][1])
+            else:
+                left = min(intervals[i][0], left)
+                right = max(intervals[i][1], right)
+        if not inserted:
+            res.append([left, right])
 
         return res
