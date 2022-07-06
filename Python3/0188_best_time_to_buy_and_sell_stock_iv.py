@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/
+# https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv/
 
 class Solution:
     def maxProfit(self, k, prices):
@@ -19,7 +19,6 @@ class Solution:
         dp[i][j][m]: the maximum profit at the ith day,
         with j (0 / 1) stock in stock and m transactions
         finished.
-        '''
         
         n = len(prices)
         if n < 2:
@@ -46,3 +45,23 @@ class Solution:
                   dp[i-1][0][m-1] - prices[i])
                 
         return dp[n-1][0][k]
+
+        '''
+
+        # Based on #0123.
+        n = len(prices)
+        k = min(k, n//2)
+        if k == 0:
+            return 0
+
+        buy_sell = [0 for _ in range(2*k)]
+        for i in range(k):
+            buy_sell[2*i] = -prices[0]
+        for price in prices:
+            buy_sell[0] = max(buy_sell[0], -price)
+            for i in range(1, 2*k):
+                if i % 2 == 0:
+                    buy_sell[i] = max(buy_sell[i], buy_sell[i-1] - price)
+                else:
+                    buy_sell[i] = max(buy_sell[i], price + buy_sell[i-1])
+        return buy_sell[2*k-1]
