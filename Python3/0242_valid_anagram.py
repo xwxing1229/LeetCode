@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/valid-anagram/
+# https://leetcode.cn/problems/valid-anagram/
 
 # ord('a') = 97
 
@@ -14,11 +14,12 @@ class Solution:
         
         if len(s) != len(t):
             return False
-        
-        s_count = [0] * 26
-        t_count = [0] * 26
-        for i in range(len(s)):
-            s_count[ord(s[i]-97)] = s_count[ord(s[i]-97)] + 1
-            t_count[ord(t[i]-97)] = t_count[ord(t[i]-97)] + 1
-        
-        return s_count == t_count
+
+        hash_table = dict()
+        for ch in s:
+            hash_table[ch] = hash_table.get(ch, 0) + 1
+        for ch in t:
+            hash_table[ch] = hash_table.get(ch, 0) - 1
+            if hash_table[ch] < 0:
+                return False
+        return True
