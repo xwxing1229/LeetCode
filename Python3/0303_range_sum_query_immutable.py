@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/range-sum-query-immutable/submissions/
+# https://leetcode.cn/problems/range-sum-query-immutable/
 
 class NumArray:
     def __init__(self, nums):
