@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/queue-reconstruction-by-height/
+# https://leetcode.cn/problems/queue-reconstruction-by-height/
 
 class Solution:
     def reconstructQueue(self, people):
@@ -9,28 +9,14 @@ class Solution:
             res: list[list[int]]
         """
 
-        people.sort()
+        people = sorted(people, key=lambda x: (x[0], -x[1]))
         n = len(people)
-        res = [0 for i in range(n)]
-
+        idxs = [i for i in range(n)]
+        res = [[] for i in range(n)]
         for person in people:
-            i = person[1]
-            count = 0
-            # Check how many empty places or places occupied by a
-            # person with same or larger height.
-            for j in range(i):
-                if not res[j] or res[j][0] >= person[0]:
-                    count = count + 1
-
-            while True:
-                if count == person[1] and not res[i]:
-                    break
-                else:
-                    i = i + 1
-                    if not res[i-1] or res[i-1][0] >= person[0]:
-                        count = count + 1
-
-            res[i] = person
+            idx = idxs[person[1]]
+            res[idx] = person
+            idxs.pop(person[1])
         return res
 
         # Another way.
