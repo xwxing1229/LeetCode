@@ -1,4 +1,4 @@
-# https://leetcode-cn.com/problems/custom-sort-string/
+# https://leetcode.cn/problems/custom-sort-string/
 
 class Solution:
     def customSortString(self, order, s):
@@ -10,17 +10,14 @@ class Solution:
             res: str
         """
         
-        count = {}
-        for i in s:
-            count[i] = count.get(i,0) + 1
+        cnt = [0 for _ in range(26)]
+        for ch in s:
+            cnt[ord(ch) - ord("a")] += 1
             
-        res = []
-        for i in order:
-            if i in count:
-                res.extend([i * count[i]])
-                count.pop(i)
-        
-        for k,v in count.items():
-            res.extend([k * v])
-        
-        return ''.join(res)
+        res = ""
+        for ch in order:
+            res += (ch * cnt[ord(ch) - ord("a")])
+            cnt[ord(ch) - ord("a")] = 0
+        for i, k in enumerate(cnt):
+            res += (chr(ord("a")+i) * k)
+        return res
