@@ -1,11 +1,5 @@
 // https://leetcode.cn/problems/bianry-number-to-string-lcci/
 
-#include <iostream>
-#include <string>
-#include <cmath>
-
-using namespace std;
-
 class Solution {
 public:
     string printBin(double num) {
