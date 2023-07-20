@@ -11,32 +11,36 @@ class Solution:
         """
         
         res = []
-        nums.sort()
         n = len(nums)
-        for i in range(n):
-            if i > 0 and nums[i] == nums[i-1]:
+        nums.sort()
+        for a in range(n-3):
+            if a > 0 and nums[a] == nums[a-1]:
                 continue
-            
-            for j in range(i+1,n):
-                if j > i + 1 and nums[j] == nums[j-1]:
+            if nums[a] + nums[a+1] + nums[a+2] + nums[a+3] > target:
+                break
+            if nums[a] + nums[n-3] + nums[n-2] + nums[n-1] < target:
+                continue
+            for b in range(a+1, n-2):
+                if b > a+1 and nums[b] == nums[b-1]:
                     continue
-                
-                left = j + 1
-                right = n - 1
-                while left < right:
-                    sum_4 = nums[i] + nums[j] + nums[left] + nums[right]
-                    if sum_4 == target:
-                        res.append([nums[i], nums[j], nums[left], nums[right]])
-                        left = left + 1
-                        right = right - 1
-                        
-                        while left < right and nums[left] == nums[left-1]:
-                            left = left + 1
-                        while left < right and nums[right] == nums[right+1]:
-                            right = right - 1
-                            
-                    elif sum_4 < target:
-                        left = left + 1
+                if nums[a] + nums[b] + nums[b+1] + nums[b+2] > target:
+                    break
+                if nums[a] + nums[b] + nums[n-2] + nums[n-1] < target:
+                    continue
+                cur = nums[a] + nums[b]
+                c, d = b+1, n-1
+                while c < d:
+                    s = cur + nums[c] + nums[d]
+                    if s == target:
+                        res.append([nums[a], nums[b], nums[c], nums[d]])
+                        while c+1 < d and nums[c+1] == nums[c]:
+                            c += 1
+                        while d-1 > c and nums[d-1] == nums[d]:
+                            d -= 1
+                        c += 1
+                        d -= 1
+                    elif s > target:
+                        d -= 1
                     else:
-                        right = right - 1
+                        c += 1
         return res

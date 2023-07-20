@@ -5,49 +5,39 @@ public:
     vector<vector<int>> fourSum(vector<int>& nums, int target) {
         vector<vector<int>> res;
         int n = nums.size();
-        if (n < 4)
-            return res;
-
         sort(nums.begin(), nums.end());
-
         for (int a = 0; a < n-3; ++a) {
-            int num_a = nums[a];
-            if ((a > 0) && (num_a == nums[a-1]))
-                continue;
-
+            if (a > 0 && nums[a] == nums[a-1]) continue;
+            if ((long)nums[a] + nums[a+1] + nums[a+2] + nums[a+3] > target) break;
+            if ((long)nums[a] + nums[n-3] + nums[n-2] + nums[n-1] < target) continue;
             for (int b = a+1; b < n-2; ++b) {
-                int num_b = nums[b];
-                if ((b > a+1) && (num_b == nums[b-1]))
-                    continue;
-
-                int c = b + 1, d = n - 1;
+                if (b > a+1 && nums[b] == nums[b-1]) continue;
+                if ((long)nums[a] + nums[b] + nums[b+1] + nums[b+2] > target) break;
+                if ((long)nums[a] + nums[b] + nums[n-2] + nums[n-1] < target) continue;
+                long cur = (long)target - nums[a] - nums[b];
+                int c = b+1, d = n-1;
                 while (c < d) {
-                    int num_c = nums[c], num_d = nums[d];
-                    if ((c > b+1) && (num_c == nums[c-1])){
-                        c = c + 1;
-                        continue;
+                    long diff = cur - nums[c] - nums[d];
+                    if (diff == 0) {
+                        res.push_back((vector<int>{nums[a], nums[b], nums[c], nums[d]}));
+                        while (c+1 < d && nums[c+1] == nums[c]) {
+                            c += 1;
+                        }
+                        while (d-1 > c && nums[d-1] == nums[d]) {
+                            d -= 1;
+                        }
+                        c += 1;
+                        d -= 1;
                     }
-                    if ((d < n-1) && (num_d == nums[d+1])) {
-                        d = d - 1;
-                        continue;
+                    else if (diff > 0) {
+                        c += 1;
                     }
-
-                    long long sum_tmp = (long long)num_a + (long long)num_b
-                        + (long long)num_c + (long long)num_d;
-                    if (sum_tmp == target) {
-                        vector<int> res_tmp = {num_a, num_b, num_c, num_d};
-                        res.push_back(res_tmp);
-                        c = c + 1;
-                        d = d - 1;
+                    else {
+                        d -= 1;
                     }
-                    else if(sum_tmp < target)
-                        c = c + 1;
-                    else
-                        d = d - 1;
                 }
             }
         }
-
         return res;
     }
 };
