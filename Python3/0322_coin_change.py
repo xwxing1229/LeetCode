@@ -10,18 +10,10 @@ class Solution:
             res: int
         """
 
-        dp = [0 for _ in range(amount+1)]
+        dp = [amount+1 for _ in range(amount+1)]
+        dp[0] = 0
         for i in range(1, amount+1):
-            tmp = amount + 1
             for coin in coins:
-                rem = i - coin
-                if rem == 0:
-                    tmp = 0
-                elif (rem > 0) and (dp[rem] > 0):
-                    tmp = min(tmp, dp[rem])
-
-                if tmp == amount + 1:
-                    dp[i] = -1
-                else:
-                    dp[i] = tmp + 1
-        return dp[amount]
+                if coin <= i and dp[i-coin] + 1 < dp[i]:
+                    dp[i] = dp[i-coin] + 1
+        return dp[amount] if dp[amount] != amount+1 else -1
