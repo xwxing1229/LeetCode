@@ -3,29 +3,21 @@ class Solution:
     def maxProfitAssignment(self, difficulty, profit, worker):
         """
         Inputs:
-            difficulty: list[int]
-            profit: list[int]
-            worker: list[int]
+            difficulty, profit, worker: list[int]
         Outputs:
             res: int
         """
 
         n = len(difficulty)
-        work = []
-        for i in range(n):
-            work.append((difficulty[i], profit[i]))
+        work = [(difficulty[i], profit[i]) for i in range(n)]
         work.sort()
+        worker.sort()
 
         res = 0
-        max_profit = 0 # maximum profit until current work
-        i = 0
-        worker.sort()
+        i, p_max = 0, 0
         for w in worker:
-            while i < n and w >= work[i][0]:
-                if work[i][1] > max_profit:
-                    max_profit = work[i][1]
-                i = i + 1
-
-            res = res + max_profit
-
+            while i < n and work[i][0] <= w:
+                p_max = max(p_max, work[i][1])
+                i += 1
+            res += p_max
         return res
