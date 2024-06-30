@@ -10,16 +10,16 @@ class Solution:
             res: int
         """
         s = sum(nums)
-        if s < target or (s - target) % 2 != 0:
+        if s < target or s < -target:
             return 0
-
-        neg = (s - target) // 2
-        n = len(nums)
-        dp = [0 for j in range(neg+1)]
-        dp[0] = 1
-        for i in range(1, n+1):
-            num = nums[i-1]
-            for j in range(neg, -1, -1):
-                if j >= num:
-                    dp[j] += dp[j-num]
-        return dp[neg]
+        # [-s, s] -> [0, 2s]
+        dp = [[0 for _ in range(2*s+1)] for _ in range(len(nums))]
+        dp[0][nums[0] + s] += 1
+        dp[0][-nums[0] + s] += 1
+        for i in range(1, len(nums)):
+            num = nums[i]
+            for sum_pre, v in enumerate(dp[i-1]):
+                if v > 0:
+                    dp[i][num + sum_pre] += v
+                    dp[i][-num + sum_pre] += v
+        return dp[-1][target + s]

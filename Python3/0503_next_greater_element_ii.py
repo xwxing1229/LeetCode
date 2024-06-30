@@ -9,16 +9,12 @@ class Solution:
             res: list[int]
         """
         n = len(nums)
-        res = [-1 for i in range(n)]
-        check = [0 for i in range(n)]
-        st = []
-        for k in range(2):
-            for i in range(n-1, -1, -1):
-                num = nums[i]
-                while st and st[-1] <= num:
-                    st.pop()
-                if st and not check[i]:
-                    res[i] = st[-1]
-                    check[i] = 1
-                st.append(num)
+        res = [-1 for _ in range(n)]
+        stack = []
+        nums += nums[:-1]
+        for i, num in enumerate(nums):
+            while stack and stack[-1][0] < num:
+                val, idx = stack.pop()
+                res[idx % n] = num
+            stack.append((num, i))
         return res
