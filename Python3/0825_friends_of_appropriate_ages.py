@@ -1,4 +1,5 @@
-# https://leetcode-cn.com/problems/friends-of-appropriate-ages/
+# https://leetcode.cn/problems/friends-of-appropriate-ages/
+
 class Solution:
     def numFriendRequests(self, ages):
         """
@@ -7,27 +8,31 @@ class Solution:
         Outputs:
             res: int
         """
-
-        ages.sort(resverse=True)
-        n = len(ages)
         res = 0
-
-        # ages[i]: A, ages[j]: B
-        j = 1
-        for i in range(n-1):
-            while j < n and ages[j] > 0.5 * ages[i] + 7:
-                j = j + 1
-            if j > i:
-                res = res + j - i - 1
-
-        # ages[i]: B, ages[j]: A
-        for i in range(n-1, 0, -1):
-            while j > -1 and ages[j] == ages[i] and ages[j] > 14:
-                j = j - 1
-
-            if j < i:
-                res = res + i - j - 1
-            else:
-                j = j - 1
-
+        ages.sort()
+        n = len(ages)
+        for i, x in enumerate(ages):
+            if x < 15:
+                continue
+            
+            left, right, idx_min = 0, i-1, i
+            valid_min = 0.5 * x + 7
+            while left <= right:
+                mid = left + (right - left) // 2
+                if ages[mid] <= valid_min:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+                    idx_min = mid
+            
+            left, right, idx_max = i+1, n-1, i
+            while left <= right:
+                mid = left + (right - left) // 2
+                if ages[mid] <= x:
+                    left = mid + 1
+                    idx_max = mid
+                else:
+                    right = mid - 1
+                    
+            res += idx_max - idx_min
         return res
