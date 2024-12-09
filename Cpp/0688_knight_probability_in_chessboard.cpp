@@ -15,7 +15,7 @@ public:
                 for (int j = 2; j < n+2; ++j) {
                     double p = 0;
                     for (auto &d: dirs) {
-                        p += dp[step-1][i-d.first][j-d.second];
+                        p += dp[step-1][i+d.first][j+d.second];
                     }
                     dp[step][i][j] = p / 8;
                 }

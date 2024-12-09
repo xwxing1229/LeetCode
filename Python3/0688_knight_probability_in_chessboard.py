@@ -12,6 +12,6 @@ class Solution:
                 for j in range(2, n+2):
                     p = 0
                     for d in dirs:
-                        p += dp[step-1][i-d[0]][j-d[1]]
+                        p += dp[step-1][i+d[0]][j+d[1]]
                     dp[step][i][j] = p / 8
         return dp[k][row+2][column+2]
