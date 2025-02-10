@@ -1,38 +1,51 @@
 // https://leetcode.cn/problems/permutations-ii/
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
 class Solution {
 public:
-    vector<vector<int>> res;
-    
     vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> res;
+        int n = nums.size();
         sort(nums.begin(), nums.end());
-        vector<int> check(nums.size(), 0);
+        vector<int> check(n, 0);
+
+        function<void(vector<int> &)> dfs = [&](vector<int> &cur) {
+            if (cur.size() == n) {
+                res.push_back(cur);
+            }
+            for (int i = 0; i < n; ++i) {
+                if (i > 0 && nums[i] == nums[i-1] && (!check[i-1])) continue;
+                else if (check[i]) continue;
+
+                cur.push_back(nums[i]);
+                check[i] = 1;
+                dfs(cur);
+                cur.pop_back();
+                check[i] = 0;
+            }
+        };
         
-        backTrack({}, nums, check);
-    
+        vector<int> cur;
+        dfs(cur);
         return res;
     }
-
-    void backTrack(vector<int> res_tmp, vector<int> nums, vector<int> check) {
-        int n = nums.size();
-        if (res_tmp.size() == n) {
-            res.push_back(res_tmp);
-            return;
-        }
-
-        for (int i = 0; i < n; ++i) {
-            if (check[i] == 1) {
-                continue;
-            }
-            if ((i > 0) && (nums[i] == nums[i-1]) && (check[i-1] == 0)) {
-                continue;
-            }
-
-            vector<int> res_new(res_tmp);
-            res_new.push_back(nums[i]);
-            check[i] = 1;
-            backTrack(res_new, nums, check);
-            check[i] = 0;
-        }
-    }
 };
+
+int main()
+{
+    Solution solu;
+    vector<int> nums = {1,1,2};
+    auto res = solu.permuteUnique(nums);
+    for (auto element: res) {
+        for (auto val: element) cout << val << ", ";
+        cout << '\n';
+    }
+    
+    return 0;
+}

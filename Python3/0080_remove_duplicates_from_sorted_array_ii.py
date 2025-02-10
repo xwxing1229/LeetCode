@@ -1,4 +1,4 @@
-# https://leetcode.cn/problems/combinations/
+# https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/
 
 class Solution:
     def removeDuplicates(self, nums):
@@ -9,18 +9,11 @@ class Solution:
             res: int
         """
 
-        cnt = 1
-        idx = 1
-        val = nums[0]
-        for i in range(1, n):
-            if nums[i] == val:
-                cnt = cnt + 1
-                if cnt < 3:
-                    nums[idx] = nums[i]
-                    idx = idx + 1
-            else:
-                nums[idx] = nums[i]
-                cnt = 1
-                idx = idx + 1
-                val = nums[i]
-        return res
+        slow, n = 2, len(nums)
+        if n <= 2:
+            return n
+        for fast in range(2, n):
+            if nums[fast] != nums[slow-2]:
+                nums[slow] = nums[fast]
+                slow += 1
+        return slow
