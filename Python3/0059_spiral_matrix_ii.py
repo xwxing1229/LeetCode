@@ -8,28 +8,30 @@ class Solution:
         Outputs:
             res: list[list[int]]
         """
+        res = [[0 for _ in range(n)] for _ in range(n)]
+        dirs = [[0,1], [1,0], [0,-1], [-1,0]]
+        dir_id = 0
+        dir = dirs[dir_id]
+        row, top, bottom = 0, 0, n-1
+        col, left, right = 0, 0, n-1
+        for val in range(1, n*n+1):
+            res[row][col] = val
 
-        res = [[0 for col in range(n)] for row in range(n)]
-        return self.generateCircle(n, 0, 1, res)
+            i, j = row + dir[0], col + dir[1]
+            if (i >= top and i <= bottom and j >= left and j <= right):
+                row, col = i, j
+                continue
 
-    def generateCircle(self, n, start_row, num, matrix):
-        if start_row >= (n+1) // 2:
-            return matrix
-        end_row = n - 1 - start_row
-        if start_row == end_row:
-            matrix[start_row][start_row] = num
-            return matrix
-
-        for col in range(start_row, end_row+1):
-            matrix[start_row][col] = num
-            num = num + 1
-        for row in range(start_row+1, end_row):
-            matrix[row][end_row] = num
-            num = num + 1
-        for col in range(end_row, start_row-1, -1):
-            matrix[end_row][col] = num
-            num = num + 1
-        for row in range(end_row-1, start_row, -1):
-            matrix[row][start_row] = num
-            num = num + 1
-        return self.generateCircle(n, start_row+1, num, matrix)
+            dir_id = (dir_id + 1) % 4
+            dir = dirs[dir_id]
+            row += dir[0]
+            col += dir[1]
+            if i < top:
+                left += 1
+            elif i > bottom:
+                right -= 1
+            elif j < left:
+                bottom -= 1
+            else:
+                top += 1
+        return res
