@@ -1,24 +1,12 @@
 # https://leetcode.cn/problems/maximum-number-of-balls-in-a-box/
-
+    
 class Solution:
-    def countBalls(self, lowLimit, highLimit):
-        """
-        Inputs:
-            lowLimit: int
-            highLimit: int
-        Outputs:
-            res: int
-        """
-        cnt = collections.defaultdict(int)
-        for i in range(lowLimit, highLimit+1):
-            s, num = 0, i
-            while i:
-                s += (num % 10)
-                num //= 10
-            cnt[s] += 1
-
-        res = 0
-        for k, v in cnt.items():
-            if v > res:
-                res = v
-        return res
+    def countBalls(self, lowLimit: int, highLimit: int) -> int:
+        boxes = [0 for _ in range(46)]
+        for num in range(lowLimit, highLimit+1):
+            s, cur = 0, num
+            while cur:
+                s += cur % 10
+                cur //= 10
+            boxes[s] += 1
+        return max(boxes)
