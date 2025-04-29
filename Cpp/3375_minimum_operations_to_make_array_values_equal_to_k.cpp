@@ -24,8 +24,8 @@ public:
 
 int main() {
     Solution sol;
-    vector<int> nums = {};
-    int k = ;
+    vector<int> nums = {5,2,5,4,5};
+    int k = 2;
     cout << sol.minOperations(nums, k) << '\n';
     return 0;
 }
