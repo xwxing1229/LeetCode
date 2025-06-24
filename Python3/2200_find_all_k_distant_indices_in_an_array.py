@@ -11,11 +11,19 @@ class Solution:
         """
         res = []
         n = len(nums)
-        for j, num in enumerate(nums):
-            if num == key:
-                for i in range(max(0,j-k), min(n, j+k+1)):
-                    if len(res) == 0 or i > res[-1]:
-                        res.append(i)
+        cnt = 0
+        for i in range(min(n, k+1)):
+            if nums[i] == key:
+                cnt += 1
+        if cnt > 0:
+            res.append(0)
+        for i in range(1, n):
+            if i + k < n:
+                cnt += (nums[i+k] == key)
+            if i - k - 1 >= 0:
+                cnt -= (nums[i-k-1] == key)
+            if cnt > 0:
+                res.append(i)
         return res
     
     
