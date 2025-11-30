@@ -1,32 +1,24 @@
 # https://leetcode.cn/problems/make-sum-divisible-by-p/
 
-class Solution:
-    def minSubarray(self, nums, p):
-        """
-        Inputs:
-            nums: list[int]
-            p: int
-        Outputs:
-            res: int
-        """
-        target = 0
-        for num in nums:
-            target = (target + num) % p
-        if target == 0:
-            return 0
+from collections import defaultdict
 
-        # Given
-        #     sum_cur % p = s,
-        # we would like to find a sum_pre that
-        #     (sum_cur - sum_pre) % p = target.
-        s, res = 0, len(nums)
-        record = {0: -1}
+class Solution:
+    def minSubarray(self, nums: list[int], p: int) -> int:
+        rem = sum(nums) % p
+        if rem == 0:
+            return 0
+        
+        # Given sum_i, we want to find sum_j with the maximum j s.t.
+        # j <= i and (sum_i - sum_j) % p = sum(nums) % p.
+        # Then the subarray to be removed is [nums[j+1], ..., nums[i]].
+        res, s = len(nums), 0
+        record = defaultdict(int)
+        record[0] = -1
         for i, num in enumerate(nums):
             s = (s + num) % p
             record[s] = i
-            target_subarr = (s - target + p) % p
-            if target_subarr in record:
-                res = min(res, i - record[target_subarr])
-        if res == len(nums):
-            res = -1
-        return res
+            tar = (s - rem + p) % p
+            if tar in record:
+                res = min(res, i-record[tar])
+            
+        return res if res < len(nums) else -1
