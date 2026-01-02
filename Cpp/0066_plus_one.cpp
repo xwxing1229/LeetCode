@@ -1,21 +1,33 @@
 // https://leetcode.cn/problems/plus-one/
 
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
 class Solution {
 public:
     vector<int> plusOne(vector<int>& digits) {
-        int n = digits.size();
         int carry = 1;
+        int n = digits.size();
         for (int i = n-1; i >= 0; --i) {
-            if (carry == 0) {
-                break;
-            }
-            int tmp = digits[i] + carry;
-            carry = tmp / 10;
-            digits[i] = tmp - carry * 10;
+            int val = digits[i] + carry;
+            digits[i] = val % 10;
+            carry = val / 10;
+            if (carry == 0) break;
         }
-        if (carry > 0) {
-            digits.insert(digits.begin(), carry);
+        if (carry) {
+            digits.emplace(digits.begin(), 1);
         }
         return digits;
     }
 };
+
+int main() {
+    Solution sol;
+    vector<int> digits = {9,9};
+    auto res = sol.plusOne(digits);
+    for (auto val: res) cout << val << ", ";
+    cout << '\n';
+    return 0;
+}
