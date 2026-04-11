@@ -1,16 +1,15 @@
 # https://leetcode.cn/problems/minimum-distance-between-three-equal-elements-ii/
 
-from collections import defaultdict
-
 class Solution:
     def minimumDistance(self, nums: list[int]) -> int:
-        position = defaultdict(list)
-        for i, num in enumerate(nums):
-            position[num].append(i)
         res = -1
-        for pos in position.values():
-            for i in range(2, len(pos)):
-                d = 2 * (pos[i] - pos[i-2])
+        n = len(nums)
+        position = [[-1, -1] for _ in range(n+1)]
+        for i, num in enumerate(nums):
+            if position[num][0] >= 0:
+                d = i - position[num][0]
                 if res < 0 or res > d:
                     res = d
-        return res
+            position[num][0] = position[num][1]
+            position[num][1] = i
+        return 2 * res if res > 0 else -1

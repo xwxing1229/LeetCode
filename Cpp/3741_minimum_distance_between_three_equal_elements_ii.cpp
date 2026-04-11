@@ -2,27 +2,28 @@
 
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 
 using namespace std;
 
 class Solution {
 public:
     int minimumDistance(vector<int>& nums) {
-        unordered_map<int, vector<int>> position;
-        for (int i = 0; i < nums.size(); ++i) {
-            position[nums[i]].push_back(i);
-        }
         int res = -1;
-        for (const auto &[num, pos]: position) {
-            for (int i = 2; i < pos.size(); ++i) {
-                int d = 2 * (pos[i] - pos[i-2]);
+        int n = nums.size();
+        vector<vector<int>> position(n+1, vector<int>(2, -1));
+        for (int i = 0; i < n; ++i) {
+            int num = nums[i];
+            auto &pos = position[num];
+            if (pos[0] >= 0) {
+                int d = i - pos[0];
                 if (res < 0 || res > d) {
                     res = d;
                 }
             }
+            pos[0] = pos[1];
+            pos[1] = i;
         }
-        return res;
+        return res > 0 ? res * 2 : -1;
     }
 };
 
