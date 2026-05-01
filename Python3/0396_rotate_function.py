@@ -1,22 +1,14 @@
 # https://leetcode.cn/problems/rotate-function/
 
 class Solution:
-    def maxRotateFunction(self, nums):
-        """
-        Inputs:
-            nums: list[int]
-        Outputs:
-            res: int
-        """
-
-        sum_nums = sum(nums)
-        f = 0
+    def maxRotateFunction(self, nums: list[int]) -> int:
+        f, s = 0, 0
+        for i, num in enumerate(nums):
+            f += i * num
+            s += num
+        res = f
         n = len(nums)
         for i in range(1, n):
-            f = f + i * nums[i]
-        res = f
-        for i in range(n-1, 0, -1):
-            f = f + sum_nums - n * nums[i]
+            f = f + s - n * nums[n-i]
             res = max(res, f)
         return res
-
