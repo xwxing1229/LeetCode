@@ -1,26 +1,14 @@
 # https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/
 
 class Solution:
-    def findMin(self, nums):
-        """
-        Inputs:
-            nums: list[int]
-        Outputs:
-            res: int
-        """
-
-        return self.findMinSub(nums, 0, len(nums)-1)
-
-    def findMinSub(self, nums, left, right):
+    def findMin(self, nums: list[int]) -> int:
+        left, right = 0, len(nums)-1
         while left < right:
-            mid = left + (right - left) // 2
-            val = nums[mid]
-            if val < nums[right]:
-                right = mid
-            elif val > nums[right]:
+            mid = (left + right) // 2
+            if nums[mid] > nums[right]:
                 left = mid + 1
+            elif nums[mid] < nums[right]:
+                right = mid
             else:
-                tmp1 = self.findMinSub(nums, left, mid-1)
-                tmp2 = self.findMinSub(nums, mid+1, right)
-                return min([tmp1, tmp2, val])
+                right -= 1
         return nums[left]
