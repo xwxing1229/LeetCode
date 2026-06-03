@@ -3,17 +3,14 @@
 class Solution:
     def earliestFinishTime(self, landStartTime: list[int], landDuration: list[int], waterStartTime: list[int], waterDuration: list[int]) -> int:
         def f(firstStartTime: list[int], firstDuration: list[int], secondStartTime: list[int], secondDuration: list[int]) -> int:
-            res = float("inf")
-            for i1, start1 in enumerate(firstStartTime):
-                finish1 = start1 + firstDuration[i1]
-                for i2, start2 in enumerate(secondStartTime):
-                    if finish1 > start2:
-                        finish2 = finish1 + secondDuration[i2]
-                    else:
-                        finish2 = start2 + secondDuration[i2]
-                    res = min(res, finish2)
+            finish = firstStartTime[0] + firstDuration[0]
+            for i, start in enumerate(firstStartTime):
+                finish = min(finish, start + firstDuration[i])
+            res = max(finish, secondStartTime[0]) + secondDuration[0]
+            for i, start in enumerate(secondStartTime):
+                tmp = max(finish, start) + secondDuration[i]
+                res = min(res, tmp)
             return res
-        
         return min(
             f(landStartTime, landDuration, waterStartTime, waterDuration),
             f(waterStartTime, waterDuration, landStartTime, landDuration)

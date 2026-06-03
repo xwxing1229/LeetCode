@@ -2,34 +2,24 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <climits>
 
 using namespace std;
 
 class Solution {
 public:
     int earliestFinishTime(vector<int>& landStartTime, vector<int>& landDuration, vector<int>& waterStartTime, vector<int>& waterDuration) {
-        auto f = [](const vector<int>& firstStartTime, const vector<int>& firstDuration,
-                    const vector<int>& secondStartTime, const vector<int>& secondDuration) {
-            int res = INT_MAX;
-            int n_first = firstStartTime.size(), n_second = secondStartTime.size();
-            for (int i1 = 0; i1 < n_first; ++i1) {
-                int finish = firstStartTime[i1] + firstDuration[i1];
-                for (int i2 = 0; i2 < n_second; ++i2) {
-                    int t;
-                    if (finish > secondStartTime[i2]) {
-                        t = finish + secondDuration[i2];
-                    }
-                    else {
-                        t = secondStartTime[i2] + secondDuration[i2];
-                    }
-                    res = min(res, t);
-                }
+        auto f = [](const vector<int>& firstStartTime, const vector<int>& firstDuration, const vector<int>& secondStartTime, const vector<int>& secondDuration) {
+            int finish = firstStartTime[0] + firstDuration[0];
+            for (int i = 0; i < firstStartTime.size(); ++i) {
+                finish = min(finish, firstStartTime[i] + firstDuration[i]);
+            }
+            int res = max(finish, secondStartTime[0]) + secondDuration[0];
+            for (int i = 0; i < secondStartTime.size(); ++i) {
+                int tmp = max(finish, secondStartTime[i]) + secondDuration[i];
+                res = min(res, tmp);
             }
             return res;
         };
-        
         return min(
             f(landStartTime, landDuration, waterStartTime, waterDuration),
             f(waterStartTime, waterDuration, landStartTime, landDuration)
