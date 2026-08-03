@@ -1,68 +1,21 @@
 // https://leetcode.cn/problems/predict-the-winner/
 
-/* Check solution for a DP-based method. */
+#include <vector>
 
-// class Solution {
-// public:
-//     bool PredictTheWinner(vector<int>& nums) {
-//         nums_ = nums;
-//         if (dfs(0, nums.size()-1, 0, 0) >= 0) {
-//             return true;
-//         }
-//         else {
-//             return false;
-//         }
-//     }
+using namespace std;
 
-//     int dfs(int left, int right, int total1, int total2) {
-//         if (left + 1 >= right) {
-//             total1 += max(nums_[left], nums_[right]);
-//             total2 += min(nums_[left], nums_[right]);
-//             return total1 - total2;
-//         }
-
-//         int diff1 = -dfs(left + 1, right, total2, total1 + nums_[left]);
-//         int diff2 = -dfs(left, right - 1, total2, total1 + nums_[right]);
-//         return max(diff1, diff2);
-//     }
-
-//     vector<int> nums_;
-// };
-
-
-// This is an improved version based on the idea above with repeated operations avoided.
 class Solution {
 public:
-    bool PredictTheWinner(vector<int>& nums) {
-        nums_ = nums;
-        n_ = nums.size();
-        if (dfs(0, n_-1) >= 0) {
-            return true;
+    bool predictTheWinner(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(n, 0));
+        for (int i = n-1; i >= 0; --i) {
+            dp[i][i] = nums[i];
+            for (int j = i+1; j < n; ++j) {
+                dp[i][j] = max(nums[i] - dp[i+1][j],
+                               nums[j] - dp[i][j-1]);
+            }
         }
-        else {
-            return false;
-        }
+        return dp[0].back() >= 0;
     }
-
-    int dfs(int left, int right) {
-        int key = left * n_ + right;
-        if (records_.find(key) != records_.end()) {
-            return records_[key];
-        }
-        if (left + 1 >= right) {
-            int diff = abs(nums_[left] - nums_[right]);
-            records_[key] = diff;
-            return diff;
-        }
-
-        int diff1 = nums_[left] - dfs(left + 1, right);
-        int diff2 = nums_[right] - dfs(left, right - 1);
-        int diff = max(diff1, diff2);
-        records_[key] = diff;
-        return diff;
-    }
-
-    vector<int> nums_;
-    int n_;
-    unordered_map<int, int> records_;
 };
