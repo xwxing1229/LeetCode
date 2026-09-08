@@ -2,14 +2,15 @@
 
 class Solution:
     def countCommas(self, n: int) -> int:
-        digits, num = 0, n
+        cnt, num = 0, n
         while num > 0:
-            num //= 10
-            digits += 1
+            num //= 1000
+            cnt += 1
         res = 0
         left = 1000
-        for _ in range(4, digits+1):
-            right = min(left * 10 - 1, n)
-            res += right - left + 1
-            left *= 10
+        for c in range(1, cnt):
+            tmp = left * 1000
+            right = min(tmp - 1, n)
+            res += (right - left + 1) * c
+            left = tmp
         return res

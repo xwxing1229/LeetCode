@@ -7,16 +7,18 @@ using namespace std;
 class Solution {
 public:
     int countCommas(int n) {
-        int digits = 0, num = n;
+        int cnt = 0, num = n;
         while (num > 0) {
-            num /= 10;
-            digits += 1;
+            num /= 1000;
+            cnt += 1;
         }
-        int res = 0, left = 1000;
-        for (int d = 4; d <= digits; ++d) {
-            int right = min(left * 10 - 1, n);
-            res += right - left + 1;
-            left *= 10;
+        int res = 0;
+        int left = 1000;
+        for (int c = 1; c < cnt; ++c) {
+            int tmp = left * 1000;
+            int right = min(tmp-1, n);
+            res += (right - left + 1) * c;
+            left = tmp;
         }
         return res;
     }
