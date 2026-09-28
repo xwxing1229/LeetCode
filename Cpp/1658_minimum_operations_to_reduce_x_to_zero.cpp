@@ -1,28 +1,32 @@
 // https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/
 
+#include <vector>
+
+using namespace std;
+
 class Solution {
 public:
     int minOperations(vector<int>& nums, int x) {
-        int res = -1, n = nums.size();
-        vector<int> lsum(n+1, 0);
-        for (int i = 1; i <= n; ++i) {
-            lsum[i] = lsum[i-1] + nums[i-1];
+        int n = nums.size();
+        int res = n + 1;
+        vector<int> presum(n+1, 0);
+        for (int i = 0; i < n; ++i) {
+            presum[i+1] = presum[i] + nums[i];
+            if (presum[i+1] == x) {
+                res = min(res, i+1);
+            }
         }
-        if (lsum[n] < x) return res;
-
-        int rsum = 0, left = n;
-        for (int right = n-1; right >= -1; --right) {
-            while ((left > 0) && (lsum[left] + rsum > x)) {
+        int sufsum = 0;
+        int left = n;
+        for (int right = n-1; right >= 0; --right) {
+            sufsum += nums[right];
+            while (left >= 0 && presum[left] + sufsum > x) {
                 left -= 1;
             }
-            if (lsum[left] + rsum == x) {
-                int tmp = left + n - 1 - right;
-                if ((res < 0) || (res > tmp)) {
-                    res = tmp;
-                }
+            if (left >= 0 && presum[left] + sufsum == x) {
+                res = min(res, left + n - right);
             }
-            if (right >= 0) rsum += nums[right];
         }
-        return res;
+        return res <= n ? res : -1;
     }
 };

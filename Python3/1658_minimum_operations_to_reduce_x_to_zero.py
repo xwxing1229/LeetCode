@@ -1,32 +1,21 @@
 # https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/
 
 class Solution:
-    def minOperations(self, nums, x):
-        """
-        Inputs:
-            nums: list[int]
-            x: int
-        Outputs:
-            res: int
-        """
-        res = -1
+    def minOperations(self, nums: list[int], x: int) -> int:
         n = len(nums)
-        lsum = [0 for i in range(n+1)]
-        for i in range(1, n+1):
-            lsum[i] = lsum[i-1] + nums[i-1]
-        if lsum[n] < x:
-            return res
+        res = n + 1
+        presum = [0 for _ in range(n+1)]
+        for i, num in enumerate(nums):
+            presum[i+1] = presum[i] + num
+            if presum[i+1] == x:
+                res = min(res, i+1)
         
-        rsum = 0
+        sufsum = 0
         left = n
-        for r in range(n-1, -2, -1):
-            while left > 0 and lsum[left] + rsum > x:
+        for right in range(n-1, -1, -1):
+            sufsum += nums[right]
+            while left >= 0 and sufsum + presum[left] > x:
                 left -= 1
-            if lsum[left] + rsum == x:
-                tmp = left + n - r - 1
-                if res < 0 or res > tmp:
-                    res = tmp
-            
-            if r >= 0:
-                rsum += nums[r]
-        return res
+            if left >= 0 and sufsum + presum[left] == x:
+                res = min(res, left + n - right)
+        return res if res <= n else -1
