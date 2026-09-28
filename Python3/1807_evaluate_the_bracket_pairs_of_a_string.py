@@ -1,28 +1,18 @@
 # https://leetcode.cn/problems/evaluate-the-bracket-pairs-of-a-string/
 
+from collections import defaultdict
 class Solution:
-    def evaluate(self, s, knowledge):
-        """
-        Inputs:
-            s: str
-            knowledge: list[list[str]]
-        Outputs:
-            res: str
-        """
-        table = dict()
-        for k, v in knowledge:
-            table[k] = v
-
-        res, key = "", ""
-        for ch in s:
-            if ch == ")":
-                if key[1:] in table:
-                    res += table[key[1:]]
-                else:
-                    res += "?"
-                key = ""
-            elif ch == "(" or key != "":
-                key += ch
+    def evaluate(self, s: str, knowledge: list[list[str]]) -> str:
+        d = defaultdict(lambda: "?", knowledge)
+        res = ""
+        i, n = 0, len(s)
+        while i < n:
+            if s[i] == "(":
+                prev = i
+                while i < n and s[i] != ")":
+                    i += 1
+                res += d[s[prev+1: i]]
             else:
-                res += ch
+                res += s[i]
+            i += 1
         return res
