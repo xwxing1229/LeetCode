@@ -1,44 +1,30 @@
 // https://leetcode.cn/problems/generate-parentheses/
 
+#include <string>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
 class Solution {
 public:
     vector<string> generateParenthesis(int n) {
-        set<string> res = {"()"};
-        int k = 1;
-        while (k < n) {
-            set<string> res_k;
-            for (auto it = res.begin(); it != res.end(); ++it) {
-                string cand = *it;
-                for (int i = 0; i < cand.size(); ++i) {
-                    string cand_i = cand;
-                    cand_i.insert(i, 1, '(');
-
-                    for (int j = 1; j < cand_i.size()+1; ++j) {
-                        string cand_ij = cand_i;
-                        cand_ij.insert(j, 1, ')');
-
-                        if (isValid(cand_ij)) {
-                            res_k.insert(cand_ij);
-                        }
+        vector<unordered_set<string>> st(n+1);
+        st[1].insert("()");
+        for (int k = 2; k <= n; ++k) {
+            for (int i = 1; i <= k/2; ++i) {
+                int j = k - i;
+                for (const auto &s1: st[i]) {
+                    for (const auto &s2: st[j]) {
+                        st[k].insert(s1 + s2);
+                        st[k].insert(s2 + s1);
                     }
                 }
             }
-            
-            res = res_k;
-            k = k + 1;
+            for (const auto &s1: st[k-1]) {
+                st[k].insert("(" + s1 + ")");
+            }
         }
-        
-        vector<string> res_vec(res.begin(), res.end());
-        return res_vec;
-    }
-    
-    bool isValid(string s) {
-        int count = 0;
-        for (char c: s) {
-            if (c == '(') count = count + 1;
-            else if (count > 0) count = count - 1;
-            else return false;
-        }
-        return true;
+        return vector<string>(st[n].begin(), st[n].end());
     }
 };
