@@ -1,23 +1,25 @@
 // https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/
 
+#include <string>
+
+using namespace std;
+
 class Solution {
 public:
     int minAddToMakeValid(string s) {
-        int cnt_open = 0, cnt_close = 0;
+        int res = 0, cnt = 0;
         for (char ch: s) {
             if (ch == '(') {
-                cnt_open += 1;
+                cnt += 1;
             }
             else {
-                if (cnt_open > 0) {
-                    cnt_open -= 1;
-                }
-                else {
-                    cnt_close += 1;
+                cnt -= 1;
+                if (cnt < 0) {
+                    res -= cnt;
+                    cnt = 0;
                 }
             }
         }
-        int res = cnt_open + cnt_close;
-        return res;
+        return res + cnt;
     }
 };
