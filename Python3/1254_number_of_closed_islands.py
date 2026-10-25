@@ -1,30 +1,30 @@
 # https://leetcode.cn/problems/number-of-closed-islands/
 
+from collections import deque
+
 class Solution:
-    def closedIsland(self, grid):
-        """
-        Inputs:
-            grid: list[list[int]]
-        Outputs:
-            res: int
-        """
-        m, n = len(grid), len(grid[0])
+    def closedIsland(self, grid: list[list[int]]) -> int:
         res = 0
+        m, n = len(grid), len(grid[0])
+        seen = [[False for _ in range(n)] for _ in range(m)]
+        dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         for i in range(m):
             for j in range(n):
-                if grid[i][j] == 0:
-                    q = deque()
-                    q.append((i, j))
-                    grid[i][j] = 1
-                    closed = True
-                    while q:
-                        curi, curj = q.popleft()
-                        if curi == 0 or curi == m-1 or curj == 0 or curj == n-1:
-                            closed = False
-                        for x, y in [(curi-1, curj), (curi+1, curj), (curi, curj-1), (curi, curj+1)]:
-                            if x >= 0 and x < m and y >= 0 and y < n and grid[x][y] == 0:
-                                q.append((x, y))
-                                grid[x][y] = 1
-                    if closed:
-                        res += 1
+                if grid[i][j] == 1 or seen[i][j]:
+                    continue
+                q = deque()
+                q.append((i, j))
+                seen[i][j] = True
+                closed = True
+                while q:
+                    i0, j0 = q.popleft()
+                    if i0 == 0 or i0 == m-1 or j0 == 0 or j0 == n-1:
+                        closed = False
+                    for di, dj in dirs:
+                        ni, nj = i0 + di, j0 + dj
+                        if ni >= 0 and ni < m and nj >= 0 and nj < n \
+                            and grid[ni][nj] == 0 and not seen[ni][nj]:
+                            q.append((ni, nj))
+                            seen[ni][nj] = True
+                res += closed
         return res

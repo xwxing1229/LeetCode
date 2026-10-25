@@ -1,35 +1,39 @@
 // https://leetcode.cn/problems/number-of-closed-islands/
 
+#include <vector>
+#include <queue>
+
+using namespace std;
+
 class Solution {
 public:
     int closedIsland(vector<vector<int>>& grid) {
-        vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        int m = grid.size(), n = grid[0].size();
         int res = 0;
+        int m = grid.size(), n = grid[0].size();
+        vector<vector<bool>> seen(m, vector<bool>(n, false));
+        vector<pair<int, int>> dirs = {{0,1}, {0,-1}, {1,0}, {-1,0}};
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == 1) continue;
+                if (grid[i][j] == 1 || seen[i][j]) continue;
                 queue<pair<int, int>> q;
-                q.push(make_pair(i, j));
-                grid[i][j] = 1;
+                q.push({i, j});
                 bool closed = true;
                 while (!q.empty()) {
-                    auto [curi, curj] = q.front();
+                    auto [i0, j0] = q.front();
                     q.pop();
-                    if (curi == 0 || curi == m-1 || curj == 0 || curj == n-1) {
+                    if (i0 == 0 || i0 == m-1 || j0 == 0 || j0 == n-1) {
                         closed = false;
                     }
-                    for (auto d: dirs) {
-                        int x = curi + d.first, y = curj + d.second;
-                        if (x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == 0) {
-                            q.push(make_pair(x, y));
-                            grid[x][y] = 1;
+                    for (const auto &[di, dj]: dirs) {
+                        int ni = i0 + di, nj = j0 + dj;
+                        if (ni >= 0 && ni < m && nj >= 0 && nj < n
+                            && grid[ni][nj] == 0 && !seen[ni][nj]) {
+                            q.push({ni, nj});
+                            seen[ni][nj] = true;
                         }
                     }
                 }
-                if (closed) {
-                    res += 1;
-                }
+                res += closed;
             }
         }
         return res;
